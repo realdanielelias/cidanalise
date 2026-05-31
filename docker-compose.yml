@@ -1,0 +1,27 @@
+services:
+  db: #banco de dados
+    image: postgres:15
+    container_name: cid_postgres
+    restart: always #se o banco crashar, reinicia ele. Revisar se e necessario mesmo
+    environment: #credenciais da db definidas em .env para o docker-compose.yml
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db-sql:/var/lib/postgresql/data
+  mining: #extracao siconfi api
+    build: ./mining
+    container_name: cid_mining
+    environment: #credenciais da db definidas em .env para o docker-compose.yml
+      - DB_HOST=db
+      - DB_NAME=${POSTGRES_DB}
+      - DB_USER=${POSTGRES_USER}
+      - DB_PASSWORD=${POSTGRES_PASSWORD}
+    volumes:
+      - ./mining:/app #cria uma subpasta /app para copiar os arquivos do diretorio da maquina real para criar a pasta de execucao da imagem do container
+    working_dir: /app
+    depends_on:
+      db:
+        condition: service_healthy #so roda o script quando o banco tiver online

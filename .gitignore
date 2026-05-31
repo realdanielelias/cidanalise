@@ -1,0 +1,19 @@
+# .gitignore
+.env
+
+#ignorar arquivos de testes
+mining/data/output/*.json 
+!mining/data/output/.gitkeep 
+
+#ignorar pasta para subir parametros customizaveis
+#mining/data/input/* 
+#!mining/data/input/.gitkeep
+
+db-sql/*
+!db-sql/.gitkeep
+
+__pycache__/
+*.pyc
+
+#sugestao da IA para usuarios de Mac
+.DS_Store 
